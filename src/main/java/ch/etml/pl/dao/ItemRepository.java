@@ -9,4 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<ItemEntity,Integer> {
+    Optional<ItemEntity> findItemEntityByNumAndClientIsNull(int num);
+
 }

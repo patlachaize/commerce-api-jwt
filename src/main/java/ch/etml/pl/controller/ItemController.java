@@ -1,10 +1,13 @@
 package ch.etml.pl.controller;
 
 import ch.etml.pl.dao.ItemRepository;
+import ch.etml.pl.dto.ClientNew;
 import ch.etml.pl.entities.ClientEntity;
 import ch.etml.pl.entities.ItemEntity;
 import ch.etml.pl.dto.Client;
 import ch.etml.pl.dto.Item;
+import ch.etml.pl.exceptions.ItemNotFoundException;
+import ch.etml.pl.service.CommerceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class CommerceController {
+public class ItemController {
 
     @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private CommerceService commerceService;
 
 
     @GetMapping(value="/items")
@@ -38,4 +43,10 @@ public class CommerceController {
         return new ResponseEntity<List<Item>>(items, HttpStatus.OK );
     }
 
+    @PutMapping(value="/items/{numItem}")
+    public ResponseEntity<Item> achete(@PathVariable int numItem, @RequestBody ClientNew clientNew)
+            throws ItemNotFoundException {
+        Item item = commerceService.achete(clientNew.getPrenom(),numItem);
+        return new ResponseEntity<Item>(item,HttpStatus.CREATED);
+    }
 }
