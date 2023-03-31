@@ -6,6 +6,7 @@ import ch.etml.pl.dto.Client;
 import ch.etml.pl.dto.Item;
 import ch.etml.pl.entities.ClientEntity;
 import ch.etml.pl.entities.ItemEntity;
+import ch.etml.pl.exceptions.AgeIncorrectException;
 import ch.etml.pl.exceptions.ItemNotFoundException;
 import ch.etml.pl.exceptions.SoldeInsuffisantException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,16 @@ public class CommerceService {
     private ClientRepository clientRepository;
 
     @Transactional
-    public Item achete(String prenom, int numItem) throws ItemNotFoundException {
+    public Item achete(String prenom, int age, int numItem) throws ItemNotFoundException {
         Optional<ItemEntity> optItem = itemRepository.findItemEntityByNumAndClientIsNull(numItem);
         if (optItem.isEmpty()) {
             throw new ItemNotFoundException(numItem);
         }
         ItemEntity itemEntity = optItem.get();
+        if (age < 18 && (itemEntity.getDescription().contains("vin")
+                || itemEntity.getDescription().contains("bière")) ) {
+            throw new AgeIncorrectException(itemEntity.getDescription());
+        }
         Optional<ClientEntity> optClient = clientRepository.findClientEntitiesByPrenomEquals(prenom);
         ClientEntity clientEntity = null;
         if (optClient.isPresent()) {

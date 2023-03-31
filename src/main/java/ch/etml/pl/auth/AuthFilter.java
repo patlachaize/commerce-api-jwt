@@ -22,7 +22,7 @@ public class AuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        if (path.equals("/items")) {
+        if (path.equals("/api/items")) {
             chain.doFilter(request, response);
             return;
         }

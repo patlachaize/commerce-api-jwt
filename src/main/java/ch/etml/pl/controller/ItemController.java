@@ -10,6 +10,7 @@ import ch.etml.pl.exceptions.ItemNotFoundException;
 import ch.etml.pl.service.CommerceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +48,11 @@ public class ItemController {
 
     @PutMapping(value="/items/{numItem}")
     @Operation(security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<Item> achete(@PathVariable int numItem, @RequestBody ClientNew clientNew)
+    public ResponseEntity<Item> achete(@PathVariable int numItem, HttpServletRequest request)
             throws ItemNotFoundException {
-        Item item = commerceService.achete(clientNew.getPrenom(),numItem);
+        String prenom = (String) request.getAttribute("prenom");
+        int age = (Integer) request.getAttribute("age");
+        Item item = commerceService.achete(prenom,age,numItem);
         return new ResponseEntity<Item>(item,HttpStatus.CREATED);
     }
 }
