@@ -6,6 +6,7 @@ import ch.etml.pl.dto.ClientNew;
 import ch.etml.pl.entities.ClientEntity;
 import ch.etml.pl.exceptions.ClientNotFoundException;
 import ch.etml.pl.exceptions.DuplicateClientException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 public class ClientController {
 
     @Autowired
